@@ -1,3 +1,3 @@
 # pocketgo
 
-Golang sdk for [pocket48api.48.cn](https://pocket48api.48.cn).
+Golang sdk for [pocketapi.48.cn](https://pocketapi.48.cn).
