@@ -1,0 +1,35 @@
+name: Tag on PR Merge
+
+on:
+  pull_request:
+    types:
+      - closed  # PRがクローズされた（マージされた）ときに実行
+
+jobs:
+  tag_version:
+    if: github.event.pull_request.merged == true  # マージされた場合のみ実行
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: チェックアウトリポジトリ
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # タグや履歴をすべて取得
+
+      - name: PR番号を取得
+        id: pr_number
+        run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
+      - name: 新しいタグを作成
+        run: |
+          NEW_TAG="v0.0.${PR_NUMBER}"
+          echo "New tag: $NEW_TAG"
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+
+      - name: リリース作成（オプション）
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v0.0.${{ env.PR_NUMBER }}
+          name: Release v0.0.${{ env.PR_NUMBER }}
+          body: "This release corresponds to PR #${{ env.PR_NUMBER }}"
