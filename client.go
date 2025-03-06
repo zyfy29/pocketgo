@@ -36,8 +36,8 @@ func NewRandomAppInfo() *AppInfo {
 	return &AppInfo{
 		Vendor:     "apple",
 		DeviceID:   strings.ToUpper(uuid.NewString()),
-		AppVersion: "7.1.12",
-		AppBuild:   "24061501",
+		AppVersion: "7.1.22",
+		AppBuild:   "25012101",
 		OSVersion:  "17.1.1",
 		OSType:     "ios",
 		DeviceName: "iPhone 12 mini",
