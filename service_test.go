@@ -94,3 +94,68 @@ func TestClient_GetLiveInfo(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_GetVoiceStatus(t *testing.T) {
+	type args struct {
+		channelId int
+		serverId  int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "normal",
+			args: args{
+				channelId: 1279492,
+				serverId:  1246459,
+			},
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := testClient.GetVoiceStatus(tt.args.channelId, tt.args.serverId)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetLiveInfo()")) {
+				return
+			}
+			t.Log(JsonMarshal(got))
+		})
+	}
+}
+
+func TestClient_GetMessageList(t *testing.T) {
+	type args struct {
+		channelId int
+		serverId  int
+		nextTime  int64
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "normal",
+			args: args{
+				channelId: 1279492,
+				serverId:  1246459,
+				nextTime:  0,
+			},
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			messages, nextTime, err := testClient.GetMessageList(tt.args.channelId, tt.args.serverId, tt.args.nextTime)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetLiveInfo()")) {
+				return
+			}
+			for i, msg := range messages {
+				t.Log(i, JsonMarshal(msg))
+			}
+			t.Log(nextTime)
+		})
+	}
+}
