@@ -29,3 +29,33 @@ func (c *Client) GetLiveInfo(liveId string) (LiveInfoContent, error) {
 	}
 	return content, nil
 }
+
+func (c *Client) GetVoiceStatus(channelId, serverId int) (VoiceStatusContent, error) {
+	content, err := formatter[VoiceStatusContent]{c}.doRestWithResult("", "https://pocketapi.48.cn/im/api/v1/team/voice/operate", map[string]int{
+		"channelId":   channelId,
+		"serverId":    serverId,
+		"operateCode": 2,
+	})
+	if err != nil {
+		return VoiceStatusContent{}, err
+	}
+	return content, nil
+}
+
+func (c *Client) GetMessageList(channelId, serverId int, nextTime int64) ([]MessageItem, int64, error) {
+	content, err := formatter[MessageContent]{c}.doRestWithResult("", "https://pocketapi.48.cn/im/api/v1/team/message/list/homeowner", map[string]any{
+		"channelId": channelId,
+		"serverId":  serverId,
+		"nextTime":  nextTime,
+		"limit":     100,
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	res := []MessageItem{}
+	for _, msg := range content.Message {
+		msg.FillExtInfo()
+		res = append(res, msg)
+	}
+	return res, content.NextTime, nil
+}

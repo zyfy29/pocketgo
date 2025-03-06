@@ -2,6 +2,7 @@ package pocket
 
 import (
 	"encoding/json"
+	"log"
 	"strconv"
 	"time"
 )
@@ -166,4 +167,56 @@ type LiveInfoContent struct {
 	Ctime              string        `json:"ctime"`
 	Announcement       string        `json:"announcement"`
 	SpecialBadge       []interface{} `json:"specialBadge"`
+}
+
+type VoiceUser struct {
+	UserId      int    `json:"userId"`
+	Nickname    string `json:"nickname"`
+	Avatar      string `json:"avatar"`
+	PfUrl       string `json:"pfUrl"`
+	VoiceStatus bool   `json:"voiceStatus"`
+}
+
+type VoiceStatusContent struct {
+	VoiceUserList []VoiceUser `json:"voiceUserList"` // empty for not doing
+	StreamUrl     string      `json:"streamUrl"`     // empty for not doing
+}
+
+type MessageItem struct {
+	MsgIDServer string `json:"msgIdServer"`
+	MsgIDClient string `json:"msgIdClient"`
+	MsgTime     int64  `json:"msgTime"`
+	MsgType     string `json:"msgType"`
+	Bodys       string `json:"bodys"`
+	ExtInfoStr  string `json:"extInfo"`
+	ExtInfo     MessageExtInfo
+}
+
+func (m *MessageItem) FillExtInfo() {
+	var extInfo MessageExtInfo
+	if err := json.Unmarshal([]byte(m.ExtInfoStr), &extInfo); err != nil {
+		log.Println(err)
+	}
+	m.ExtInfo = extInfo
+}
+
+type MessageExtInfo struct {
+	Module      string `json:"module"`
+	ChannelRole string `json:"channelRole"`
+	User        struct {
+		UserId   int    `json:"userId"`
+		NickName string `json:"nickName"`
+		TeamLogo string `json:"teamLogo"`
+		Avatar   string `json:"avatar"`
+		Level    int    `json:"level"`
+		RoleId   int    `json:"roleId"`
+		Vip      bool   `json:"vip"`
+		PfUrl    string `json:"pfUrl"`
+	} `json:"user"`
+	BubbleId string `json:"bubbleId"`
+}
+
+type MessageContent struct {
+	Message  []MessageItem `json:"message"`
+	NextTime int64         `json:"nextTime"` // unix millisecond
 }
