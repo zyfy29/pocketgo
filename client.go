@@ -78,12 +78,12 @@ func (c *Client) doPocketRequest(req *http.Request) (*http.Response, error) {
 	return resp, err
 }
 
-type formatter[T any] struct {
+type responseFormatter[T any] struct {
 	c *Client
 }
 
 // req should be able to marshaled to json
-func (f formatter[T]) doRestWithResult(method, url string, req any) (t T, err error) {
+func (f responseFormatter[T]) doRestWithResult(method, url string, req any) (t T, err error) {
 	if method != "GET" {
 		method = "POST"
 	}
