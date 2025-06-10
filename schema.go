@@ -329,3 +329,7 @@ type MessageContent struct {
 	Message  []MessageItem `json:"message"`
 	NextTime int64         `json:"nextTime"` // unix millisecond
 }
+
+type TpBalanceContent struct {
+	TpNum int `json:"tpNum"`
+}

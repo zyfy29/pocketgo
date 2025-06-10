@@ -59,3 +59,13 @@ func (c *Client) GetMessageList(channelId, serverId int, nextTime int64) ([]Mess
 	}
 	return res, content.NextTime, nil
 }
+
+func (c *Client) GetTpBalance(ticketId int) (int, error) {
+	content, err := responseFormatter[TpBalanceContent]{c}.doRestWithResult("", "https://pocketapi.48.cn/netface/api/v1/user/tp/balance", map[string]int{
+		"ticketId": ticketId,
+	})
+	if err != nil {
+		return 0, err
+	}
+	return content.TpNum, nil
+}
