@@ -1,0 +1,33 @@
+name: Auto Tag v0.0.x
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Get current max v0.0.x
+        id: get_tag
+        run: |
+          # 既存のv0.0.xタグから最大値を取得
+          last_tag=$(git tag -l 'v0.0.*' | sed 's/v0.0.//' | sort -n | tail -1)
+          if [ -z "$last_tag" ]; then
+            new_tag="v0.0.1"
+          else
+            new_tag="v0.0.$((last_tag + 1))"
+          fi
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+
+      - name: Create new tag
+        run: |
+          git tag ${{ steps.get_tag.outputs.new_tag }}
+          git push origin ${{ steps.get_tag.outputs.new_tag }}
