@@ -333,3 +333,64 @@ type MessageContent struct {
 type TpBalanceContent struct {
 	TpNum int `json:"tpNum"`
 }
+
+type StarInfo struct {
+	UserId       int           `json:"userId"`
+	Nickname     string        `json:"nickname"`
+	Avatar       string        `json:"avatar"`
+	Badge        []interface{} `json:"badge"`
+	Level        int           `json:"level"`
+	IsStar       bool          `json:"isStar"`
+	Friends      int           `json:"friends"`
+	Followers    int           `json:"followers"`
+	TeamLogo     string        `json:"teamLogo"`
+	Signature    string        `json:"signature"`
+	BgImg        string        `json:"bgImg"`
+	Vip          bool          `json:"vip"`
+	UserRole     int           `json:"userRole"`
+	PfUrl        string        `json:"pfUrl"`
+	EffectUser   bool          `json:"effectUser"`
+	RealNickName string        `json:"realNickName"`
+	StarName     string        `json:"starName"`
+	Star         bool          `json:"star"`
+}
+
+type ReservationItem struct {
+	EventId        int      `json:"eventId"`
+	StarInfo       StarInfo `json:"starInfo"`
+	Status         int      `json:"status"`
+	QueueSize      int      `json:"queueSize"`
+	WaitTime       int      `json:"waitTime"`
+	WaitTimeStr    string   `json:"waitTimeStr"`
+	FrontUserCount int      `json:"frontUserCount"`
+	GroupId        int      `json:"groupId"`
+	StartTime      string   `json:"startTime"`
+	QueueStartTime string   `json:"queueStartTime"`
+	MaxSingleNum   int      `json:"maxSingleNum"`
+	Title          string   `json:"title"`
+}
+
+type HandshakeContent struct {
+	TpNum               int               `json:"tpNum"`
+	QueueNumber         string            `json:"queueNumber"`
+	EventId             int               `json:"eventId"`
+	Duration            int               `json:"duration"`
+	ChatRoomId          string            `json:"chatRoomId"`
+	AlreadyReservations []ReservationItem `json:"alreadyReservations"`
+	Reservations        []ReservationItem `json:"reservations"`
+	EventIds            []struct {
+		EventId     int `json:"eventId"`
+		Duration    int `json:"duration"`
+		QueueNumber int `json:"queueNumber"`
+	} `json:"eventIds"`
+	ExchangeHandshake bool `json:"exchangeHandshake"`
+	GroupInfos        []struct {
+		GroupId   int    `json:"groupId"`
+		GroupName string `json:"groupName"`
+	} `json:"groupInfos"`
+	BuyUrl     string `json:"buyUrl"`
+	RuleUrl    string `json:"ruleUrl"`
+	AppealUrl  string `json:"appealUrl"`
+	TicketTime int    `json:"ticketTime"`
+	TicketName string `json:"ticketName"`
+}

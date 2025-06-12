@@ -187,3 +187,31 @@ func TestClient_GetTpBalance(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_GetHandshakeList(t *testing.T) {
+	type args struct {
+		ticketId int
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr assert.ErrorAssertionFunc
+	}{
+		{
+			name: "normal",
+			args: args{
+				ticketId: 3,
+			},
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := testClient.GetHandshakeList(tt.args.ticketId)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetHandshakeList(%v)", tt.args.ticketId)) {
+				return
+			}
+			t.Log(JsonMarshalIndent(got))
+		})
+	}
+}

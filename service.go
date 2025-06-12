@@ -69,3 +69,13 @@ func (c *Client) GetTpBalance(ticketId int) (int, error) {
 	}
 	return content.TpNum, nil
 }
+
+func (c *Client) GetHandshakeList(ticketId int) (HandshakeContent, error) {
+	content, err := responseFormatter[HandshakeContent]{c}.doRestWithResult("", "https://pocketapi.48.cn/netface/api/v1/user/reservation/info", map[string]int{
+		"ticketId": ticketId,
+	})
+	if err != nil {
+		return HandshakeContent{}, err
+	}
+	return content, nil
+}
