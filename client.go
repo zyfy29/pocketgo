@@ -2,6 +2,7 @@ package pocket
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
@@ -73,7 +74,11 @@ func (c *Client) doPocketRequest(req *http.Request) (*http.Response, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("token", c.Token)
 	req.Header.Set("appInfo", c.AppInfo)
-	client := &http.Client{}
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
 	resp, err := client.Do(req)
 	return resp, err
 }
