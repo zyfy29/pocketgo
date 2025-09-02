@@ -215,3 +215,12 @@ func TestClient_GetHandshakeList(t *testing.T) {
 		})
 	}
 }
+
+func TestGetShopLatency(t *testing.T) {
+	latency, err := GetShopLatency()
+	if err != nil {
+		t.Errorf("GetShopLatency() error = %v, return fallback latency = %d ms", err, latency)
+	} else {
+		t.Logf("GetShopLatency() latency = %d ms", latency)
+	}
+}

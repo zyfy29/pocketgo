@@ -28,5 +28,6 @@ go.work.sum
 test.env
 
 # Editor/IDE
-# .idea/
+.idea/
+*.iml
 # .vscode/

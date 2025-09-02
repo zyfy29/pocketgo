@@ -1,5 +1,13 @@
 package pocket
 
+import (
+	"fmt"
+	"regexp"
+	"resty.dev/v3"
+	"strconv"
+	"time"
+)
+
 func (c *Client) ValidateToken() (string, error) {
 	content, err := responseFormatter[UserInfoItem]{c}.doRestWithResult("", "https://pocketapi.48.cn/user/api/v1/user/info/reload", map[string]string{})
 	if err != nil {
@@ -78,4 +86,30 @@ func (c *Client) GetHandshakeList(ticketId int) (HandshakeContent, error) {
 		return HandshakeContent{}, err
 	}
 	return content, nil
+}
+
+func GetShopLatency() (int, error) {
+	client := resty.New()
+	defer client.Close()
+
+	latency := 350
+	beforeMilli := time.Now().UnixMilli()
+	res, err := client.R().Get("https://shop.48.cn/pai/GetTime")
+	if err != nil {
+		return latency, err
+	}
+	if res.StatusCode() != 200 {
+		return latency, fmt.Errorf("unexpected status code: %d", res.StatusCode())
+	}
+
+	re := regexp.MustCompile(`\((\d+)\)`)
+	matches := re.FindAllStringSubmatch(res.String(), -1)
+	if len(matches) != 1 || len(matches[0]) != 2 {
+		return latency, fmt.Errorf("unexpected response format: %s", res.String())
+	}
+	responseMilli, err := strconv.Atoi(matches[0][1])
+	if err != nil {
+		return latency, err
+	}
+	return responseMilli - int(beforeMilli), nil
 }
